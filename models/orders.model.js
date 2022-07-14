@@ -1,26 +1,35 @@
 const { db, DataTypes } = require('../utils/database.utils');
 
 // Create our first model (table)
-const Console = db.define('consoles', {
+const Order = db.define('orders', {
 	id: {
 		primaryKey: true,
 		type: DataTypes.INTEGER,
 		autoIncrement: true,
 		allowNull: false,
 	},
-	name: {
-		type: DataTypes.STRING,
+	mealId: {
+		type: DataTypes.INTEGER,
 		allowNull: false,
 	},
-	company: {
-		type: DataTypes.STRING,
+	userId: {
+		type: DataTypes.INTEGER,
 		allowNull: false,
+	},
+	totalPrice: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+	},
+	quantity: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		defaultValue: 1
 	},
 	status: {
 		type: DataTypes.STRING,
 		allowNull: false,
-		defaultValue: 'active',
+		defaultValue: 'active'
 	},
 });
 
-module.exports = { Console };
+module.exports = { Order };

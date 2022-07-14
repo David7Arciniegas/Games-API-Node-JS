@@ -2,41 +2,44 @@ const express = require('express');
 
 // Controllers
 const {
-	getAllUsers,
-	createUser,
-	updateUser,
-	deleteUser,
-	getAllOrders,
-	getUserOrders,
-	login,
-} = require('../controllers/users.controller');
+	getAllRestaurants,
+	getRestaurantById,
+	createRestaurantReview,
+	updateRestaurantReview,
+	deleteReview,
+	createRestaurant,
+	updateRestaurant,
+	deleteRestaurant,
+} = require('../controllers/restaurants.controller');
 
 // Middlewares
 const {
-	createUserValidators,
+	createRestaurantValidators,
+	createRestaurantReviewValidators
 } = require('../middlewares/validators.middleware');
-const { userExists } = require('../middlewares/users.middleware');
+const { restaurantExists, restaurantReviewExists } = require('../middlewares/restaurants.middleware');
 const {
 	protectSession,
 	protectUserAccount,
 } = require('../middlewares/auth.middleware');
 
-const usersRouter = express.Router();
+const restaurantsRouter = express.Router();
 
-usersRouter.post('/login', login);
+restaurantsRouter
+	.get('/', getAllRestaurants)
+	.get('/:id', getRestaurantById)
+restaurantsRouter.use(protectSession);
 
-usersRouter.post('/signup', createUserValidators, createUser);
 
-usersRouter.use(protectSession);
+restaurantsRouter
+	.post('/reviews/:restaurantId',protectUserAccount,restaurantExists,createRestaurantReviewValidators, createRestaurantReview)
+	.use('/reviews/:reviewId', restaurantReviewExists)
+	.patch('/reviews/:reviewId', protectUserAccount, updateRestaurantReview)
+	.delete('/reviews/:reviewId',protectUserAccount, deleteReview)
+	.post('/', protectUserAccount, createRestaurantValidators, createRestaurant)
+	.use('/:id', restaurantExists)
+	.patch('/:id',protectUserAccount, updateRestaurant)
+	.delete('/:id',protectUserAccount, deleteRestaurant)
 
 
-usersRouter
-	.use('/:id', userExists)
-	.get('/', getAllUsers)
-	.patch('/:id',protectUserAccount, updateUser)
-	.delete('/:id',protectUserAccount, deleteUser)
-	.get('/orders',protectUserAccount, getAllOrders)
-	.use('/orders/:id', userExists)
-	.get('/orders/:id',protectUserAccount, getUserOrders)
-
-module.exports = { usersRouter };
+module.exports = { restaurantsRouter };

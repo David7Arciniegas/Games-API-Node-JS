@@ -7,7 +7,7 @@ const User = db.define('user', {
 		autoIncrement: true,
 		allowNull: false,
 	},
-	name: {
+	username: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
@@ -24,6 +24,11 @@ const User = db.define('user', {
 		type: DataTypes.STRING,
 		allowNull: false,
 		defaultValue: 'active',
+	},
+	role: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		defaultValue: 'normal',
 	},
 });
 

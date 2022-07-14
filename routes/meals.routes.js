@@ -2,44 +2,37 @@ const express = require('express');
 
 // Controllers
 const {
-	getAllRestaurants,
-	getRestaurantById,
-	createRestaurantReview,
-	updateRestaurantReview,
-	deleteReview,
-	createRestaurant,
-	updateRestaurant,
-	deleteRestaurant,
-	getAllReviews,
-	getRestaurantReviews,
-	login,
-} = require('../controllers/restaurants.controller');
+	getAllMeals,
+	getMealById,
+	createMeal,
+	updateMeal,
+	deleteMeal,
+} = require('../controllers/meals.controller');
 
 // Middlewares
 const {
-	createRestaurantValidators,
+	createMealValidators,
 } = require('../middlewares/validators.middleware');
-const { restaurantExists } = require('../middlewares/restaurants.middleware.middleware');
+const { restaurantExists } = require('../middlewares/restaurants.middleware');
+const { mealExists } = require('../middlewares/meals.middleware');
 const {
 	protectSession,
 	protectUserAccount,
 } = require('../middlewares/auth.middleware');
 
-const usersRouter = express.Router();
+const mealsRouter = express.Router();
 
-usersRouter
-	.get('/', getAllRestaurants)
-	.get('/:id', getRestaurantById)
-usersRouter.use(protectSession);
+mealsRouter
+	.use('/:restaurantId', restaurantExists)
+	.get('/', getAllMeals)
+	.get('/:id', getMealById)
+mealsRouter.use(protectSession);
 
 
-usersRouter
-	.use('/:id', restaurantExists)
-	.post('/', createRestaurant)
-	.patch('/:id',protectUserAccount, updateRestaurant)
-	.delete('/:id',protectUserAccount, deleteRestaurant)
-	.post('/reviews/id',protectUserAccount, createRestaurantReview)
-	.patch('/reviews/:id', protectUserAccount, updateRestaurantReview)
-	.delete('/reviews/:id',protectUserAccount, deleteReview)
+mealsRouter
+	.post('/:restaurantId', createMeal)
+	.use('/:id', mealExists)
+	.patch('/:id',protectUserAccount, updateMeal)
+	.delete('/:id',protectUserAccount, deleteMeal)
 
-module.exports = { usersRouter };
+module.exports = { mealsRouter };

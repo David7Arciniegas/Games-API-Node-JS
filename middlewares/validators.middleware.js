@@ -18,7 +18,7 @@ const checkResult = (req, res, next) => {
 };
 
 const createUserValidators = [
-	body('name').notEmpty().withMessage('Name cannot be empty'),
+	body('username').notEmpty().withMessage('Username cannot be empty'),
 	body('email').isEmail().withMessage('Must provide a valid email'),
 	body('password')
 		.isLength({ min: 8 })
@@ -28,9 +28,9 @@ const createUserValidators = [
 	checkResult,
 ];
 
-const createGameValidators = [
-	body('title').notEmpty().withMessage('title cannot be empty'),
-	body('genre').notEmpty().withMessage('genre provide a valid gender'),
+const createOrderValidators = [
+	body('quantity').notEmpty().withMessage('quantity cannot be empty'),
+	body('quantity').isInt().withMessage('quantity cannot be non-integer'),
 	checkResult,
 ];
 
@@ -39,9 +39,24 @@ const createReviewValidators = [
 	checkResult,
 ];
 
-const createConsoleValidators = [
+const createRestaurantValidators = [
 	body('name').notEmpty().withMessage('name cannot be empty'),
-	body('company').notEmpty().withMessage('company provide a valid gender'),
+	body('address').notEmpty().withMessage('address cannot be empty'),
+	body('rating').notEmpty().withMessage('rating cannot be empty'),
 	checkResult,
 ];
-module.exports = { createConsoleValidators, createReviewValidators, createUserValidators, createGameValidators };
+
+const createRestaurantReviewValidators = [
+	body('comment').notEmpty().withMessage('name cannot be empty'),
+	body('rating').notEmpty().withMessage('rating cannot be empty'),
+	checkResult,
+];
+
+const createMealValidators = [
+	body('name').notEmpty().withMessage('name cannot be empty'),
+	body('price').notEmpty().withMessage('price cannot be empty'),
+	body('price').isInt().withMessage('price cannot be non-integer'),
+	body('restaurantId').notEmpty().withMessage('restaurantId cannot be empty').isInt().withMessage('restaurantId must be integer'),
+	checkResult,
+];
+module.exports = { createRestaurantReviewValidators, createRestaurantValidators, createMealValidators, createReviewValidators, createUserValidators, createOrderValidators };

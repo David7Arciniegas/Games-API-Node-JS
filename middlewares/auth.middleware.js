@@ -48,8 +48,10 @@ const protectSession = catchAsync(async (req, res, next) => {
 
 const protectUserAccount = (req, res, next) => {
 	// const { id } = req.params -> Alternative
-	const { sessionUser, user } = req;
-
+	let { sessionUser, user } = req;
+	if (!user){
+		user = sessionUser
+	}
 	// If the id's don't match, return error (403)
 	if (sessionUser.id !== user.id) {
 		return next(new AppError('You do not own this account', 403));

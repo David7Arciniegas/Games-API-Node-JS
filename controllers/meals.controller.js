@@ -3,77 +3,97 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 // Models
-const { Game } = require('../models/meals.model');
-const { Console } = require('../models/orders.model');
-const { Review } = require('../models/reviews.model');
+const { Meal } = require('../models/meals.model');
+const { User } = require('../models/user.model');
+const { Restaurant } = require('../models/restaurant.model');
 // Utils
 const { catchAsync } = require('../utils/catchAsync.utils');
 const { AppError } = require('../utils/appError.utils');
 
-exports.getAllGames = catchAsync(async (req, res, next) => {
-	const games = await Game.findAll({
+exports.getAllMeals = catchAsync(async (req, res, next) => {
+	const meals = await Meal.findAll({
 		where: { status: 'active' },
-		include: [{ model: Console }, {model: Review}],
+		include: { model: Restaurant }
 	});
-
-	if (!games) {
-		return res.status(404).json({
-		  status: "error",
-		  message: "Game not found",
-		});
-	  }
 
 	res.status(200).json({
 		status: 'success',
-		data: { games },
+		data: { meals },
 	});
 });
 
-
-exports.createGame = catchAsync(async (req, res, next) => {
-	const { title, genre } = req.body;
-
-	const newGame = await Game.create({
-		title,
-		genre
-	});
-
-	res.status(201).json({
-		status: 'success',
-		newGame,
-	});
-});
-
-exports.createGameReview = catchAsync(async (req, res, next) => {
-
-	const userId = req.sessionUser.id
+exports.getMealById = catchAsync(async (req, res, next) => {
 	const {id} = req.params
-	const { comment } = req.body;
-	console.log(userId, id, comment)
-	const newReview = await Review.create({
-		gameId:id,
-		userId:userId,
-		comment:comment
+	const meal = await Meal.findOne({
+		where: { id, status: 'active' },
+		include: { model: Restaurant }
 	});
+
+	if (!meal) {
+		return res.status(404).json({
+			status: "error",
+			message: "Meal not found",
+		});
+	}
+
+	res.status(200).json({
+		status: 'success',
+		data: { meal },
+	});
+});
+
+exports.createMeal = catchAsync(async (req, res, next) => {
+	const {restaurantId} = req.params
+	const { name, price } = req.body;
+
+	const newMeal = await Meal.create({
+		name,
+		restaurantId,
+		price
+	});
+
 	res.status(201).json({
 		status: 'success',
-		newReview,
+		newMeal,
 	});
 });
 
-exports.updateGame = catchAsync(async (req, res, next) => {
-	const { game } = req;
-	const { title } = req.body;
 
-	await game.update({ title });
 
-	res.status(204).json({ status: 'success' });
+exports.updateMeal = catchAsync(async (req, res, next) => {
+	const userId = req.sessionUser.id
+	const user = await User.findOne({
+		where:{id:userId}
+	});
+
+	if( user.role !== 'admin'){
+		res.status(401).json({ status: 'Unauthorized' });
+	} else{
+		const { meal } = req;
+		const { name, price } = req.body;
+
+		await meal.update({ name, price });
+
+		res.status(204).json({ status: 'success' });
+	}
+
+
 });
 
-exports.deleteGame = catchAsync(async (req, res, next) => {
-	const { game } = req;
+exports.deleteMeal = catchAsync(async (req, res, next) => {
+	const userId = req.sessionUser.id
+	const user = await User.findOne({
+		where:{id:userId}
+	});
 
-	await game.update({ status: 'deleted' });
+	if( user.role !== 'admin'){
+		res.status(401).json({ status: 'Unauthorized' });
+	} else{
+		const { meal } = req;
 
-	res.status(204).json({ status: 'success' });
+		await meal.update({ status: 'deleted' });
+
+		res.status(204).json({ status: 'success' });
+	}
+
 });

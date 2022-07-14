@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 // Models
 const { User } = require('../models/user.model');
-
+const { Order } = require('../models/orders.model');
 // Utils
 const { catchAsync } = require('../utils/catchAsync.utils');
 const { AppError } = require('../utils/appError.utils');
@@ -18,6 +18,30 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 	res.status(200).json({
 		status: 'success',
 		data: { users },
+	});
+});
+
+exports.getAllOrders = catchAsync(async (req, res, next) => {
+	const userId = req.sessionUser.id
+	const order = await Order.findAll({
+		where: { userId, status: 'active' }
+	});
+	res.status(200).json({
+		status: 'success',
+		data: { order },
+	});
+});
+
+exports.getUserOrders = catchAsync(async (req, res, next) => {
+	const { id } = req.params;
+	const orders = await Order.findAll({
+		where: { userId:id,
+			status: 'active' }
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: { orders },
 	});
 });
 
@@ -56,16 +80,17 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-	const { name, email, password } = req.body;
+	const { username, email, password, role } = req.body;
 
 	// Hash password
 	const salt = await bcrypt.genSalt(12);
 	const hashPassword = await bcrypt.hash(password, salt);
 
 	const newUser = await User.create({
-		name,
+		username,
 		email,
 		password: hashPassword,
+		role,
 	});
 
 	// Remove password from response
@@ -79,9 +104,9 @@ exports.createUser = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
 	const { user } = req;
-	const { name, email } = req.body;
+	const { username, email } = req.body;
 
-	await user.update({ name, email });
+	await user.update({ username, email });
 
 	res.status(204).json({ status: 'success' });
 });

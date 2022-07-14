@@ -6,6 +6,8 @@ const {
 	createUser,
 	updateUser,
 	deleteUser,
+	getAllOrders,
+	getUserOrders,
 	login,
 } = require('../controllers/users.controller');
 
@@ -29,9 +31,13 @@ usersRouter.use(protectSession);
 
 
 usersRouter
+	.get('/orders/',protectUserAccount, getAllOrders)
+	.use('/orders/:id', userExists)
+	.get('/orders/:id',protectUserAccount, getUserOrders)
 	.use('/:id', userExists)
 	.get('/', getAllUsers)
 	.patch('/:id',protectUserAccount, updateUser)
-	.delete('/:id',protectUserAccount, deleteUser);
+	.delete('/:id',protectUserAccount, deleteUser)
+
 
 module.exports = { usersRouter };

@@ -2,37 +2,32 @@ const express = require('express');
 
 // Controllers
 const {
-	getAllMeals,
-	getMealById,
-	createMeal,
-	updateMeal,
-	deleteMeal,
-} = require('../controllers/meals.controller');
+	createOrder,
+	updateOrder,
+	deleteOrder,
+	getOrderByUserId,
+} = require('../controllers/orders.controller');
 
 // Middlewares
 const {
-	createMealValidators,
+	createOrderValidators,
 } = require('../middlewares/validators.middleware');
-const { restaurantExists } = require('../middlewares/restaurants.middleware.middleware');
-const { mealExists } = require('../middlewares/meals.middleware.middleware');
+const { restaurantExists } = require('../middlewares/restaurants.middleware');
+const { orderExists } = require('../middlewares/orders.middleware');
 const {
 	protectSession,
 	protectUserAccount,
 } = require('../middlewares/auth.middleware');
 
-const mealsRouter = express.Router();
+const ordersRouter = express.Router();
 
-mealsRouter
-	.get('/', getAllMeals)
-	.get('/:id', getMealById)
-mealsRouter.use(protectSession);
+ordersRouter.use(protectSession);
 
+ordersRouter
+	.use('/:id', orderExists)
+	.post('/',protectUserAccount, createOrder)
+	.get('/me',protectUserAccount, getOrderByUserId)
+	.patch('/:id',protectUserAccount, updateOrder)
+	.delete('/:id',protectUserAccount, deleteOrder)
 
-mealsRouter
-	.use('/:restaurantId', restaurantExists)
-	.use('/:id', mealExists)
-	.post('/:restaurantId', createMeal)
-	.patch('/:id',protectUserAccount, updateMeal)
-	.delete('/:id',protectUserAccount, deleteMeal)
-
-module.exports = { mealsRouter };
+module.exports = { ordersRouter };

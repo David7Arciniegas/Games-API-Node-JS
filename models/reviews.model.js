@@ -12,7 +12,7 @@ const Review = db.define('reviews', {
 		type: DataTypes.INTEGER,
 		allowNull: false,
 	},
-	gameId: {
+	restaurantId: {
 		type: DataTypes.INTEGER,
 		allowNull: false,
 	},
@@ -20,10 +20,9 @@ const Review = db.define('reviews', {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	status: {
-		type: DataTypes.STRING,
+	rating: {
+		type: DataTypes.INTEGER,
 		allowNull: false,
-		defaultValue: 'active',
 	},
 });
 

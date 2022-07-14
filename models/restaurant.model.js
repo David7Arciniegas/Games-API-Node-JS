@@ -1,19 +1,24 @@
 const { db, DataTypes } = require('../utils/database.utils');
 
 // Create our first model (table)
-const GameInConsoles = db.define('gamesinconsoles', {
+const Restaurant = db.define('restaurants', {
 	id: {
 		primaryKey: true,
 		type: DataTypes.INTEGER,
 		autoIncrement: true,
 		allowNull: false,
 	},
-	gameId: {
-		type: DataTypes.INTEGER,
+	name: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		unique: true,
+	},
+	address: {
+		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	consoleId: {
-		type: DataTypes.STRING,
+	rating: {
+		type: DataTypes.INTEGER,
 		allowNull: false,
 	},
 	status: {
@@ -23,4 +28,4 @@ const GameInConsoles = db.define('gamesinconsoles', {
 	},
 });
 
-module.exports = { GameInConsoles };
+module.exports = { Restaurant };
