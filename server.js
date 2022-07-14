@@ -25,7 +25,7 @@ Meal.hasMany(Restaurant,{foreignKey:'mealId'})
 User.hasMany(Order,{ foreignKey: 'userId'})
 Order.belongsTo(Meal,{foreignKey:'mealId'})
 User.hasMany(Review,{ foreignKey: 'userId'})
-Order.belongsTo(User,{foreignKey:'mealId'})
+
 
 
 
