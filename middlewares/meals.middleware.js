@@ -1,5 +1,5 @@
 // Models
-const { Game } = require('../models/game.model');
+const { Game } = require('../models/meals.model');
 
 // Utils
 const { AppError } = require('../utils/appError.utils');

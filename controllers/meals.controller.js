@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 // Models
-const { Game } = require('../models/game.model');
-const { Console } = require('../models/console.model');
+const { Game } = require('../models/meals.model');
+const { Console } = require('../models/orders.model');
 const { Review } = require('../models/reviews.model');
 // Utils
 const { catchAsync } = require('../utils/catchAsync.utils');
@@ -15,6 +15,13 @@ exports.getAllGames = catchAsync(async (req, res, next) => {
 		where: { status: 'active' },
 		include: [{ model: Console }, {model: Review}],
 	});
+
+	if (!games) {
+		return res.status(404).json({
+		  status: "error",
+		  message: "Game not found",
+		});
+	  }
 
 	res.status(200).json({
 		status: 'success',

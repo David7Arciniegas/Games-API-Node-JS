@@ -1,6 +1,6 @@
 // Models
-const { Console } = require('../models/console.model');
-const { Game } = require('../models/game.model');
+const { Console } = require('../models/orders.model');
+const { Game } = require('../models/meals.model');
 // Utils
 const { catchAsync } = require('../utils/catchAsync.utils');
 const { AppError } = require('../utils/appError.utils');
