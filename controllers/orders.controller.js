@@ -45,7 +45,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 		totalPrice:price,
 		userId
 	});
-
 	res.status(201).json({
 		status: 'success',
 		newOrder,
