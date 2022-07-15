@@ -24,9 +24,9 @@ const ordersRouter = express.Router();
 ordersRouter.use(protectSession);
 
 ordersRouter
+	.get('/me',protectUserAccount, getOrderByUserId)
 	.use('/:id', orderExists)
 	.post('/',protectUserAccount, createOrder)
-	.get('/me',protectUserAccount, getOrderByUserId)
 	.patch('/:id',protectUserAccount, updateOrder)
 	.delete('/:id',protectUserAccount, deleteOrder)
 

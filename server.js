@@ -18,12 +18,13 @@ db
 // Init models relations
 
 
-	// associations can be defined here
+// associations can be defined here
 Restaurant.hasMany(Review,{foreignKey:'restaurantId'})
 Restaurant.hasMany(Meal,{foreignKey:'restaurantId'})
 Meal.hasMany(Restaurant,{foreignKey:'mealId'})
 User.hasMany(Order,{ foreignKey: 'userId'})
 Order.belongsTo(Meal,{foreignKey:'mealId'})
+Order.belongsTo(Restaurant,{foreignKey:'userId'})
 User.hasMany(Review,{ foreignKey: 'userId'})
 
 

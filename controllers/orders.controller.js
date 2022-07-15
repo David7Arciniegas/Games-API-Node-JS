@@ -34,7 +34,7 @@ exports.getOrderByUserId = catchAsync(async (req, res, next) => {
 
 exports.createOrder = catchAsync(async (req, res, next) => {
 	const userId = req.sessionUser.id
-	const { quantity, mealId } = req.body;
+	const { quantity, mealId, } = req.body;
 	const meal = await Meal.findOne({
 		where:{id:mealId}
 	});
@@ -43,7 +43,8 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 		quantity,
 		mealId,
 		totalPrice:price,
-		userId
+		userId,
+		
 	});
 	res.status(201).json({
 		status: 'success',
